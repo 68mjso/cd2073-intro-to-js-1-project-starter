@@ -8,6 +8,31 @@
    - productId: unique id for the product (number)
    - image: picture of product (url string)
 */
+const cherry = {
+  name: "cherry",
+  price: 1,
+  quantity: 0,
+  productId: 1,
+  image: "/images/cherry.jpg",
+};
+
+const orange = {
+  name: "orange",
+  price: 2,
+  quantity: 0,
+  productId: 2,
+  image: "/images/orange.jpg",
+};
+
+const strawberry = {
+  name: "strawberry",
+  price: 3,
+  quantity: 0,
+  productId: 3,
+  image: "/images/strawberry.jpg",
+};
+
+const products = [cherry, orange, strawberry];
 
 /* Images provided in /images folder. All images from Unsplash.com
    - cherry.jpg by Mae Mu
@@ -17,16 +42,41 @@
 
 /* Declare an empty array named cart to hold the items in the cart */
 
+let cart = [];
+
 /* Create a function named addProductToCart that takes in the product productId as an argument
   - addProductToCart should get the correct product based on the productId
   - addProductToCart should then increase the product's quantity
   - if the product is not already in the cart, add it to the cart
 */
 
+function addProductToCart(productId) {
+  const obj = products.find((e) => e.productId === productId);
+  if (!obj) {
+    return;
+  }
+  obj.quantity += 1;
+  let index = cart.map((e) => e.productId).indexOf(productId);
+  if (index === -1) {
+    cart.push(obj);
+    return;
+  }
+}
+
 /* Create a function named increaseQuantity that takes in the productId as an argument
   - increaseQuantity should get the correct product based on the productId
   - increaseQuantity should then increase the product's quantity
 */
+
+function increaseQuantity(productId) {
+  const obj = products.find((e) => e.productId === productId);
+  if (!obj) {
+    return;
+  }
+  obj.quantity += 1;
+  // let index = cart.map((e) => e.productId).indexOf(productId);
+  // cart[index].quantity += 1;
+}
 
 /* Create a function named decreaseQuantity that takes in the productId as an argument
   - decreaseQuantity should get the correct product based on the productId
@@ -34,11 +84,35 @@
   - if the function decreases the quantity to 0, the product is removed from the cart
 */
 
+function decreaseQuantity(productId) {
+  const obj = products.find((e) => e.productId === productId);
+  if (!obj) {
+    return;
+  }
+  obj.quantity -= 1;
+  // let index = cart.map((e) => e.productId).indexOf(productId);
+  // cart[index].quantity -= 1;
+  if (obj.quantity <= 0) {
+    obj.quantity = 0;
+    removeProductFromCart(productId);
+  }
+}
+
 /* Create a function named removeProductFromCart that takes in the productId as an argument
   - removeProductFromCart should get the correct product based on the productId
   - removeProductFromCart should update the product quantity to 0
   - removeProductFromCart should remove the product from the cart
 */
+
+function removeProductFromCart(productId) {
+  let index = cart.map((e) => e.productId).indexOf(productId);
+  const obj = products.find((e) => e.productId === productId);
+  if (!obj) {
+    return;
+  }
+  obj.quantity = 0;
+  cart.splice(index, 1);
+}
 
 /* Create a function named cartTotal that has no parameters
   - cartTotal should iterate through the cart to get the total cost of all products
@@ -46,8 +120,19 @@
   Hint: price and quantity can be used to determine total cost
 */
 
+function cartTotal() {
+  let total = 0;
+  for (let i = 0; i < cart.length; i++) {
+    total += cart[i].quantity * cart[i].price;
+  }
+  return total;
+}
+
 /* Create a function called emptyCart that empties the products from the cart */
 
+function emptyCart() {
+  cart = [];
+}
 /* Create a function named pay that takes in an amount as an argument
   - amount is the money paid by customer
   - pay will return a negative number if there is a remaining balance
@@ -55,8 +140,11 @@
   Hint: cartTotal function gives us cost of all the products in the cart  
 */
 
-/* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
+function pay(amount) {
+  return amount - cartTotal();
+}
 
+/* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
 
 /* The following is for running unit tests. 
    To fully complete this project, it is expected that all tests pass.
@@ -65,15 +153,15 @@
 */
 
 module.exports = {
-   products,
-   cart,
-   addProductToCart,
-   increaseQuantity,
-   decreaseQuantity,
-   removeProductFromCart,
-   cartTotal,
-   pay, 
-   emptyCart,
-   /* Uncomment the following line if completing the currency converter bonus */
-   // currency
-}
+  products,
+  cart,
+  addProductToCart,
+  increaseQuantity,
+  decreaseQuantity,
+  removeProductFromCart,
+  cartTotal,
+  pay,
+  emptyCart,
+  /* Uncomment the following line if completing the currency converter bonus */
+  // currency
+};
